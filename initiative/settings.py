@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-)&--277f^#q#5tb#%^029q#79g#raba(xz==q)ef359xx2$0%k"
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -74,12 +75,14 @@ WSGI_APPLICATION = "initiative.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+DATABASE_PASSWORD = os.environ["DJANGO_DATABASE_PASSWORD"]
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "initiative-server",
         "USER": "initiative-server",
-        "PASSWORD": "<McOscLRZeqt@,3i~T?8",
+        "PASSWORD": DATABASE_PASSWORD,
         "HOST": "127.0.0.1",
         "PORT": "3306"
     }
