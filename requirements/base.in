@@ -5,3 +5,6 @@ Markdown
 Pygments
 django-filter
 mysqlclient
+
+python-dateutil
+
