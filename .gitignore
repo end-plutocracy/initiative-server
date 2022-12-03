@@ -1,0 +1,4 @@
+wrapper.sh
+/venv/
+__pycache__/
+/.idea/
