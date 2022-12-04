@@ -3,30 +3,42 @@ from rest_framework import serializers
 from . import models as _models
 
 
-class SigneeSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = _models.Signee
-        fields = ["user", "signatures"]
-        extra_kwargs = {
-            "user": {"view_name": "user", "lookup_field": "id"},
-            "signatures": {"view_name": "signature", "lookup_field": "id"},
-        }
-
-
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = _models.User
-        fields = ["username", "first_name", "last_name"]
-
-
-class SignatureSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = _models.Signature
-        fields = ["initiative", "signed_on"]
-        extra_kwargs = {"initiative": {"view_name": "initiative", "lookup_field": "id"}}
+        fields = ["url", "username", "first_name", "last_name"]
+        extra_kwargs = {"url": {"view_name": "user", "lookup_field": "id"}}
 
 
 class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = _models.Initiative
-        fields = ["title"]
+        fields = ["url", "title"]
+        extra_kwargs = {"url": {"view_name": "initiative", "lookup_field": "id"}}
+
+
+class SignatureSerializer(serializers.HyperlinkedModelSerializer):
+    initiative = InitiativeSerializer()
+    signed_on = serializers.DateTimeField()
+
+    class Meta:
+        model = _models.Signature
+        fields = ["url", "initiative", "signed_on"]
+        extra_kwargs = {
+            "url": {"view_name": "signature", "lookup_field": "id"},
+            "initiative": {"view_name": "initiative", "lookup_field": "id"},
+        }
+
+
+class SigneeSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializer()
+    signatures = SignatureSerializer(many=True)
+
+    class Meta:
+        model = _models.Signee
+        fields = ["url", "user", "signatures"]
+        extra_kwargs = {
+            "user": {"view_name": "user", "lookup_field": "id"},
+            "signatures": {"view_name": "signature", "lookup_field": "id"},
+            "url": {"view_name": "signee", "lookup_field": "id"},
+        }

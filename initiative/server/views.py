@@ -12,7 +12,16 @@ from . import permissions as _perms
 class SigneeList(generics.ListCreateAPIView):
     serializer_class = _ser.SigneeSerializer
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, _perms.CanRetrieveSigneePermission]
+
+    def get_queryset(self):
+        return _models.Signee.objects.filter(user=self.request.user)
+
+
+class SigneeRetrieve(generics.RetrieveAPIView):
+    serializer_class = _ser.SigneeSerializer
+    permission_classes = [IsAuthenticated, _perms.CanRetrieveSigneePermission]
+    lookup_field = "id"
 
     def get_queryset(self):
         return _models.Signee.objects.filter(user=self.request.user)
