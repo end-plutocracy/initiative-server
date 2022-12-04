@@ -11,14 +11,18 @@ from . import fields as _fields
 
 
 class Attendance(models.Model):
-    signee: "Signee" = models.OneToOneField("Signee", on_delete=models.CASCADE)
+    signee: "Signee" = models.OneToOneField(
+        "Signee", on_delete=models.CASCADE, related_name="attendance"
+    )
 
     def __str__(self):
         return f"Attendance of {self.signee.user.username}"
 
 
 class RecurrenceRule(models.Model):
-    attendance: Attendance = models.ForeignKey(Attendance, on_delete=models.CASCADE)
+    attendance: Attendance = models.ForeignKey(
+        Attendance, on_delete=models.CASCADE, related_name="recurrence_rules"
+    )
     recurrence_rule: _rrule.rrule = _fields.RruleField(max_length=2048)
     is_positive: bool = models.BooleanField()
 
@@ -28,7 +32,9 @@ class RecurrenceRule(models.Model):
 
 
 class DateTime(models.Model):
-    attendance: Attendance = models.ForeignKey(Attendance, on_delete=models.CASCADE)
+    attendance: Attendance = models.ForeignKey(
+        Attendance, on_delete=models.CASCADE, related_name="date_times"
+    )
     datetime: _dt.datetime = models.DateTimeField()
     is_positive: bool = models.BooleanField()
 
@@ -49,15 +55,21 @@ class Initiative(models.Model):
 
 class Manager(models.Model):
     user: User = models.ForeignKey(User, on_delete=models.CASCADE)
-    initiative: Initiative = models.ForeignKey(Initiative, on_delete=models.CASCADE)
+    initiative: Initiative = models.ForeignKey(
+        Initiative, on_delete=models.CASCADE, related_name="managers"
+    )
 
     def __str__(self):
         return f"Manager {self.user.username} for {self.initiative.title}"
 
 
 class Signature(models.Model):
-    signee: "Signee" = models.ForeignKey("Signee", on_delete=models.CASCADE)
-    initiative: Initiative = models.ForeignKey(Initiative, on_delete=models.CASCADE)
+    signee: "Signee" = models.ForeignKey(
+        "Signee", on_delete=models.CASCADE, related_name="signatures"
+    )
+    initiative: Initiative = models.ForeignKey(
+        Initiative, on_delete=models.CASCADE, related_name="signatures"
+    )
     signed_on: _dt.datetime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -74,8 +86,12 @@ class Collector(models.Model):
 
 class CollectedSignature(models.Model):
     collected_on: _dt.datetime = models.DateTimeField(auto_now=True)
-    collector: "Signee" = models.ForeignKey(Collector, null=True, on_delete=models.SET_NULL)
-    signature: Signature = models.ForeignKey(Signature, on_delete=models.PROTECT)
+    collector: "Collector" = models.ForeignKey(
+        Collector, null=True, on_delete=models.SET_NULL, related_name="signatures"
+    )
+    signature: Signature = models.OneToOneField(
+        Signature, on_delete=models.PROTECT, related_name="collected_signature"
+    )
 
     def __str__(self):
         text = f"{self.collector.user.username} collected  signature on {self.collected_on.isoformat()}"
@@ -87,5 +103,3 @@ class Signee(models.Model):
 
     def __str__(self):
         return f"Signee {self.user.username}"
-
-
