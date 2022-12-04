@@ -7,4 +7,5 @@ django-filter
 mysqlclient
 
 python-dateutil
+Pillow
 
