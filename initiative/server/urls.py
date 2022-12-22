@@ -8,4 +8,5 @@ urlpatterns = [
     path("user/<int:id>", _views.UserRetrieve.as_view(), name="user"),
     path("signature/<int:id>", _views.SignatureRetrieve.as_view(), name="signature"),
     path("initiative/<int:id>", _views.InitiativeRetrieve.as_view(), name="initiative"),
+    path("initiatives/", _views.InitiativesList.as_view(), name="initiatives"),
 ]

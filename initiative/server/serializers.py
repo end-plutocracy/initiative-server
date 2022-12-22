@@ -11,9 +11,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
+    number_of_signatures = serializers.IntegerField()
+
     class Meta:
         model = _models.Initiative
-        fields = ["url", "title"]
+        fields = ["url", "title", "number_of_signatures"]
         extra_kwargs = {"url": {"view_name": "initiative", "lookup_field": "id"}}
 
 

@@ -1,4 +1,5 @@
 import datetime as _dt
+import typing as _tp
 
 import dateutil.rrule as _rrule
 from django.contrib.auth.models import User
@@ -46,8 +47,18 @@ class Initiative(models.Model):
     title: str = models.CharField(max_length=2048)
     description: str = models.TextField()
     image = models.ImageField(null=True, blank=True)
-    created_on = models.DateTimeField(auto_now=True)
-    stopped_accepting_signatures_on = models.DateTimeField(null=True, blank=True)
+    created_on: _dt.datetime = models.DateTimeField(auto_now=True)
+    stopped_accepting_signatures_on: _tp.Optional[_dt.datetime] = models.DateTimeField(
+        null=True, blank=True
+    )
+
+    @property
+    def number_of_signatures(self) -> int:
+        return Signature.objects.filter(initiative=self).count()
+
+    @property
+    def number_of_collected_signatures(self) -> int:
+        return CollectedSignature.objects.filter(initiative=self).count()
 
     def __str__(self):
         return self.title

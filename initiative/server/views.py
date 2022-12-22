@@ -51,3 +51,10 @@ class InitiativeRetrieve(generics.RetrieveAPIView):
     queryset = _models.Initiative.objects.all()
     serializer_class = _ser.InitiativeSerializer
     lookup_field = "id"
+
+
+class InitiativesList(generics.ListAPIView):
+    serializer_class = _ser.InitiativeSerializer
+    queryset = _models.Initiative.objects.filter(
+        stopped_accepting_signatures_on__isnull=True
+    )
