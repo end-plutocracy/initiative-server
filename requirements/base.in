@@ -4,7 +4,7 @@ uritemplate
 Markdown
 Pygments
 django-filter
-mysqlclient
+psycopg2
 
 python-dateutil
 Pillow

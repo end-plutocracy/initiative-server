@@ -80,12 +80,12 @@ DATABASE_PASSWORD = os.environ["DJANGO_DATABASE_PASSWORD"]
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": "initiative-server",
         "USER": "initiative-server",
         "PASSWORD": DATABASE_PASSWORD,
         "HOST": "127.0.0.1",
-        "PORT": "3306"
+        "PORT": "5432"
     }
 }
 
